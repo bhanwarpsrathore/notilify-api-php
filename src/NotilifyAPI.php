@@ -96,21 +96,69 @@ class NotilifyAPI {
     /**
      * Send single message
      * 
-     * @param string $phoneNumber
      * @param string $senderId
+     * @param string $phoneNumber
      * @param string $message
      * @return array
      */
-    public function message(string $phoneNumber, string $senderId, string $message): array {
+    public function message(string $senderId, string $phoneNumber, string $message): array {
         $uri = '/message';
 
         $parameters = [
-            'phoneNumber' => $phoneNumber,
             'senderId' => $senderId,
+            'phoneNumber' => $phoneNumber,
             'message' => $message
         ];
 
         $this->lastResponse = $this->apiRequest('POST', $uri, $parameters);
+
+        return $this->lastResponse['body'];
+    }
+
+    /**
+     * Send bulk messages
+     * 
+     * @param string $senderId
+     * @param array $data
+     * @return array
+     */
+    public function bulkMessages(string $senderId, array $data): array {
+        $uri = '/message/bulk';
+
+        $parameters = [
+            'senderId' => $senderId,
+            'data' => $data
+        ];
+
+        $this->lastResponse = $this->apiRequest('POST', $uri, $parameters);
+
+        return $this->lastResponse['body'];
+    }
+
+    /**
+     * Get messages
+     * 
+     * @param int $pageNumber
+     * @param int $perPage
+     */
+    public function getMessages(int $pageNumber = 1, int $perPage = 40): array {
+        $uri = '/message?perPage=' . $perPage . '&pageNumber=' . $pageNumber;
+
+        $this->lastResponse = $this->apiRequest('GET', $uri);
+
+        return $this->lastResponse['body'];
+    }
+
+    /**
+     * Find message by id
+     * 
+     * @param string $id
+     * @return array
+     */
+    public function findMessage(string $id): array {
+        $uri = '/message?id=' . $id;
+
+        $this->lastResponse = $this->apiRequest('GET', $uri);
 
         return $this->lastResponse['body'];
     }
