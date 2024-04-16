@@ -162,4 +162,55 @@ class NotilifyAPI {
 
         return $this->lastResponse['body'];
     }
+
+    /**
+     * Create OTP
+     * 
+     * @param string $phoneNumber The phone number to be verified. It should be in E.164 format (e.g., +1234567890).
+     * @param string $message The message to be sent to the user eg; "Here is your OTP to use to complete your purchase"
+     * @param string $senderId Optional. The senderId will default to a phone number if none is selected.
+     * @param int $length Optional. The length of the otp to be sent to the user, the default is 6.
+     * @param int $expiryTime Optional. The expiry time of the OTP in minutes. (default is "20 minutes").
+     * @param string $type Optional. The allowed values are ('number', 'alphanumeric', 'letter'), default is alphanumeric
+     * @return array
+     */
+    public function createOtp(string $phoneNumber, string $message, string $senderId = '', int $length = 6, int $expiryTime = 20, string $type = 'alphanumeric'): array {
+        $uri = '/otp';
+
+        $parameters = [
+            'phoneNumber' => $phoneNumber,
+            'message' => $message,
+            'length' => (string) $length,
+            'expiryTime' => (string) $expiryTime,
+            'type' => $type
+        ];
+
+        if (!empty($senderId)) {
+            $parameters['senderId'] = $senderId;
+        }
+
+        $this->lastResponse = $this->apiRequest('POST', $uri, $parameters);
+
+        return $this->lastResponse['body'];
+    }
+
+    /**
+     * Verify OTP
+     * 
+     * @param string $phoneNumber The phone number to be verified. It should be in E.164 format (e.g., +1234567890).
+     * @param string $otp The OTP to be verified.
+     * @return array
+     */
+    public function verifyOtp(string $phoneNumber, string $otp): array {
+        $uri = '/otp/verify';
+
+        $parameters = [
+            'phoneNumber' => $phoneNumber,
+            'otp' => $otp
+        ];
+
+        $this->lastResponse = $this->apiRequest('POST', $uri, $parameters);
+
+        return $this->lastResponse['body'];
+    }
 }
