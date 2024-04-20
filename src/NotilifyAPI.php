@@ -213,4 +213,35 @@ class NotilifyAPI {
 
         return $this->lastResponse['body'];
     }
+
+    /**
+     * Create Sender Id
+     * 
+     * @param string $senderId
+     * @return array
+     */
+    public function createSenderId(string $senderId): array {
+        $uri = '/sender-id';
+
+        $parameters = [
+            'senderId' => $senderId
+        ];
+
+        $this->lastResponse = $this->apiRequest('POST', $uri, $parameters);
+
+        return $this->lastResponse['body'];
+    }
+
+    /**
+     * Get Sender Ids
+     * 
+     * @return array
+     */
+    public function getSenderIds(): array {
+        $uri = '/sender-id';
+
+        $this->lastResponse = $this->apiRequest('GET', $uri);
+
+        return $this->lastResponse['body'];
+    }
 }
